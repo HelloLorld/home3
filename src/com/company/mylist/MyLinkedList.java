@@ -15,9 +15,8 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 
     @Override
     public void add(int index, E element) {
-        if (index < 0 || index > size - 1) {
-            System.out.println("Out of range");
-            return;
+        if(!checkIndex(index)) {
+            return ;
         } else if (size == 0 || size - 1 == index) {
             addToEnd(element);
         } else if (index == 0) {
@@ -56,10 +55,7 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 
     @Override
     public E get(int index) {
-        if (index < 0 || index > size - 1) {
-            System.out.println("Out of range");
-            return null;
-        }
+        if(!checkIndex(index)) return null;
         return node(index).element;
     }
 
@@ -77,10 +73,7 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 
     @Override
     public E remove(int index) {
-        if (index < 0 || index > size - 1) {
-            System.out.println("Out of range");
-            return null;
-        }
+        if(!checkIndex(index)) return null;
 
         Node<E> removeNode = node(index);
         if (removeNode == null) {
@@ -96,33 +89,26 @@ public class MyLinkedList<E> implements ILinkedList<E> {
             removeNode.element = null;
             removeNode.nextNode = null;
             first = tmp;
-            size--;
-            return element;
         } else if (removeNode.nextNode == null) {
             tmp = removeNode.prevNode;
             element = removeNode.element;
             removeNode.element = null;
             removeNode.prevNode = null;
             last = tmp;
-            size--;
-            return element;
         } else {
             tmp = removeNode.prevNode;
             tmp.nextNode = removeNode.nextNode;
             element = removeNode.element;
             removeNode.nextNode = null;
             removeNode.prevNode = null;
-            size--;
-            return element;
         }
+        size--;
+        return element;
     }
 
     @Override
     public E set(int index, E element) {
-        if (index < 0 || index > size) {
-            System.out.println("Out of range");
-            return null;
-        }
+        if(!checkIndex(index)) return null;
         Node<E> cur = node(index);
         E old = cur.element;
         cur.element = element;
@@ -191,6 +177,14 @@ public class MyLinkedList<E> implements ILinkedList<E> {
             last = last.nextNode;
         }
         size++;
+    }
+
+    private boolean checkIndex(int index) {
+        if (index < 0 || index > size-1) {
+            System.out.println("Out of range");
+            return false;
+        }
+        else return true;
     }
 
     private static class Node<E> {
